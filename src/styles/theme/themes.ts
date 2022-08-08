@@ -1,15 +1,17 @@
 const lightTheme = {
-  primary: '#c00',
-  text: '#000',
-  background: '#fff',
-  border: '#ccc',
+  primary: '#9b283c',
+  primaryHover: '#d2556b',
+  text: '#1d0207',
+  background: '#fffbf3',
+  border: '#e5e1da',
 };
 
 const darkTheme: Theme = {
-  primary: '#c00',
-  text: '#000',
-  background: '#fff',
-  border: '#ccc',
+  primary: '#9b283c',
+  primaryHover: '#d2556b',
+  text: '#1d0207',
+  background: '#fffbf3',
+  border: '#e5e1da',
 };
 
 export type Theme = typeof lightTheme;

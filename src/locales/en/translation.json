@@ -4,6 +4,21 @@
   "routes": {
     "home": "Home"
   },
+  "home": {
+    "title": "Inventory",
+    "description": "Keep your finest goods up to date using the goblin's inventory.",
+    "form": {
+      "name": "Name",
+      "quality": "Quality",
+      "sellIn": "Sell In"
+    }
+  },
+  "table": {
+    "of": "{{currentPage}} of {{pagesCount}}"
+  },
+  "footer": {
+    "rights": "All Rights Reserved."
+  },
   "notFound": {
     "title": "Page Not Found",
     "description": "The page you are looking for could have been deleted or never have existed."
