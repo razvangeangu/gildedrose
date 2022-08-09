@@ -1,3 +1,4 @@
+import { GildedRose, Item } from 'api/gilded-rose';
 import { Button } from 'app/components/Button';
 import { Input } from 'app/components/Input';
 import { Table } from 'app/components/Table';
@@ -14,7 +15,7 @@ export function HomePage() {
 
   const hasCalendarFeature = false;
 
-  const initialData = useMemo(
+  const initialData: Array<Item> = useMemo(
     () => [
       { name: '+5 Dexterity Vest', quality: 10, sellIn: 20 },
       { name: 'Aged Brie', quality: 2, sellIn: 0 },
@@ -41,9 +42,11 @@ export function HomePage() {
     [],
   );
 
-  const [data, setData] = useState(initialData);
+  const [data, setData] = useState<Array<Item>>(initialData);
 
-  const columns = React.useMemo(
+  const inventory = useMemo(() => new GildedRose(data), [data]);
+
+  const columns = useMemo(
     () => [
       {
         Header: t(translations.home.form.name),
@@ -78,7 +81,7 @@ export function HomePage() {
       .parentElement as HTMLFormElement;
     const formData = new FormData(formElement);
 
-    const newItem = {
+    const newItem: Item = {
       name: formData.get('name') as string,
       quality: (formData.get('quality') ?? 0) as number,
       sellIn: (formData.get('sellIn') ?? 0) as number,
@@ -88,7 +91,7 @@ export function HomePage() {
   };
 
   const didClickUpdateInventory = () => {
-    // TODO: implement
+    setData([...inventory.updateQuality()]);
   };
 
   return (
