@@ -1,5 +1,5 @@
 import * as React from 'react';
-import styled from 'styled-components/macro';
+import styled, { css } from 'styled-components/macro';
 
 export interface InputProps {
   /**
@@ -53,6 +53,13 @@ export interface InputProps {
    * @default undefined
    */
   className?: string;
+
+  /**
+   * The size of the input.
+   *
+   * @default 'regular'
+   */
+  size?: 'small' | 'regular';
 }
 
 export type InputType =
@@ -75,6 +82,7 @@ export function Input({
   didChange,
   defaultValue,
   className,
+  size = 'regular',
 }: InputProps) {
   const inputId = `input-${label}-${name}`;
 
@@ -85,8 +93,8 @@ export function Input({
   };
 
   return (
-    <Label htmlFor={inputId} className={className}>
-      {label && <LabelSpan>{label}</LabelSpan>}
+    <Label htmlFor={inputId} className={className} variant={size}>
+      {label && <LabelSpan variant={size}>{label}</LabelSpan>}
       <InputContainer>
         <InputRaw
           id={inputId}
@@ -96,6 +104,7 @@ export function Input({
           onInput={onInput}
           name={name}
           defaultValue={defaultValue || ''}
+          variant={size}
         />
       </InputContainer>
     </Label>
@@ -111,7 +120,12 @@ const InputContainer = styled.div`
   width: inherit;
 `;
 
-const InputRaw = styled.input`
+const smallInput = css`
+  font-size: 0.75rem;
+  padding: 0.375rem 0.625rem;
+`;
+
+const InputRaw = styled.input<{ variant?: InputProps['size'] }>`
   background-color: #fff;
   border: 0;
   border-radius: 0.25rem;
@@ -121,18 +135,37 @@ const InputRaw = styled.input`
   width: 100%;
 
   &:disabled {
+    background-color: ${p => p.theme.border};
     color: #ccc;
   }
+
+  ${p => (p.variant === 'small' ? smallInput : '')}
 `;
 
-const Label = styled.label`
+const smallLabelContainer = css`
+  align-content: center;
+  align-items: center;
+  flex-direction: row;
+`;
+
+const Label = styled.label<{ variant?: InputProps['size'] }>`
   display: flex;
   flex-direction: column;
   font-weight: 800;
   text-align: left;
   width: inherit;
+
+  ${p => (p.variant === 'small' ? smallLabelContainer : '')}
 `;
 
-const LabelSpan = styled.span`
+const smallLabel = css`
+  font-size: 0.75rem;
+  margin-bottom: 0;
+  margin-right: 0.375rem;
+`;
+
+const LabelSpan = styled.span<{ variant?: InputProps['size'] }>`
   margin-bottom: 0.5rem;
+
+  ${p => (p.variant === 'small' ? smallLabel : '')}
 `;

@@ -39,6 +39,13 @@ export interface ButtonProps {
    * @default 'regular'
    */
   size?: 'regular' | 'small';
+
+  /**
+   * Sets the type of the input button.
+   *
+   * @default 'button'
+   */
+  type?: React.ButtonHTMLAttributes<HTMLButtonElement>['type'];
 }
 
 export function Button({
@@ -47,11 +54,12 @@ export function Button({
   className,
   onClick,
   size = 'regular',
+  type = 'button',
 }: ButtonProps) {
   return (
     <ButtonContainer
       className={className}
-      type="button"
+      type={type}
       disabled={disabled}
       onClick={onClick}
       size={size}

@@ -1,35 +1,20 @@
 import { Button } from 'app/components/Button';
 import { Input } from 'app/components/Input';
 import { Table } from 'app/components/Table';
+import dayjs from 'dayjs';
 import { translations } from 'locales/translations';
-import React, { useMemo } from 'react';
+import React, { useMemo, useState } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { useTranslation } from 'react-i18next';
-import styled from 'styled-components/macro';
+import styled, { css } from 'styled-components/macro';
 import { media } from 'styles/media';
 
 export function HomePage() {
   const { t } = useTranslation();
 
-  const columns = React.useMemo(
-    () => [
-      {
-        Header: t(translations.home.form.name),
-        accessor: 'name',
-      },
-      {
-        Header: t(translations.home.form.quality),
-        accessor: 'quality',
-      },
-      {
-        Header: t(translations.home.form.sellIn),
-        accessor: 'sellIn',
-      },
-    ],
-    [t],
-  );
+  const hasCalendarFeature = false;
 
-  const data = useMemo(
+  const initialData = useMemo(
     () => [
       { name: '+5 Dexterity Vest', quality: 10, sellIn: 20 },
       { name: 'Aged Brie', quality: 2, sellIn: 0 },
@@ -56,6 +41,56 @@ export function HomePage() {
     [],
   );
 
+  const [data, setData] = useState(initialData);
+
+  const columns = React.useMemo(
+    () => [
+      {
+        Header: t(translations.home.form.name),
+        accessor: 'name',
+      },
+      {
+        Header: t(translations.home.form.quality),
+        accessor: 'quality',
+      },
+      {
+        Header: t(translations.home.form.sellIn),
+        accessor: 'sellIn',
+      },
+    ],
+    [t],
+  );
+
+  const today = useMemo(() => dayjs().format('YYYY-MM-DD'), []);
+
+  const didChangeDate = (value: string) => {
+    const future = dayjs(value);
+    const delta = future.diff(dayjs(), 'days');
+
+    setData(
+      initialData.map(item => ({ ...item, sellIn: item.sellIn - delta })),
+    );
+  };
+
+  const didClickAddItem = (event: React.MouseEvent<HTMLButtonElement>) => {
+    event.preventDefault();
+    const formElement = (event.target as HTMLButtonElement)
+      .parentElement as HTMLFormElement;
+    const formData = new FormData(formElement);
+
+    const newItem = {
+      name: formData.get('name') as string,
+      quality: (formData.get('quality') ?? 0) as number,
+      sellIn: (formData.get('sellIn') ?? 0) as number,
+    };
+
+    setData([newItem, ...data]);
+  };
+
+  const didClickUpdateInventory = () => {
+    // TODO: implement
+  };
+
   return (
     <>
       <Helmet>
@@ -68,12 +103,49 @@ export function HomePage() {
       <Subtitle>{t(translations.home.description)}</Subtitle>
 
       <Form>
-        <StyledInput label={t(translations.home.form.name)} type="text" />
-        <StyledInput label={t(translations.home.form.quality)} type="number" />
-        <StyledInput label={t(translations.home.form.sellIn)} type="number" />
+        <StyledInput
+          name="name"
+          label={t(translations.home.form.name)}
+          type="text"
+        />
 
-        <StyledButton label="+" />
+        <StyledInput
+          name="quality"
+          label={t(translations.home.form.quality)}
+          type="number"
+        />
+
+        <StyledInput
+          name="sellIn"
+          label={t(translations.home.form.sellIn)}
+          type="number"
+        />
+
+        <StyledButton label="+" onClick={didClickAddItem} />
       </Form>
+
+      <TableOptions>
+        {hasCalendarFeature && (
+          <>
+            <TableOptionSpan isBold>
+              {t(translations.table.from)}
+            </TableOptionSpan>
+            <TableOptionSpan>{t(translations.table.today)}</TableOptionSpan>
+            <Input
+              type="date"
+              size="small"
+              label={t(translations.table.to)}
+              defaultValue={today}
+              didChange={didChangeDate}
+            />
+          </>
+        )}
+
+        <Button
+          label={t(translations.home.update)}
+          onClick={didClickUpdateInventory}
+        />
+      </TableOptions>
 
       <TableContainer>
         <Table columns={columns} data={data} />
@@ -119,4 +191,22 @@ const Header = styled.h2`
 
 const TableContainer = styled.div`
   margin-top: 1.5rem;
+`;
+
+const TableOptions = styled.div`
+  align-content: center;
+  align-items: center;
+  display: flex;
+  gap: 0.375rem;
+  margin-top: 1.5rem;
+`;
+
+const TableOptionSpan = styled.span<{ isBold?: boolean }>`
+  font-size: 0.75rem;
+  ${p =>
+    p.isBold
+      ? css`
+          font-weight: 800;
+        `
+      : ''}
 `;

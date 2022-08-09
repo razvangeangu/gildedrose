@@ -11,9 +11,13 @@
       "name": "Name",
       "quality": "Quality",
       "sellIn": "Sell In"
-    }
+    },
+    "update": "Update Inventory"
   },
   "table": {
+    "from": "From",
+    "to": "to",
+    "today": "today",
     "of": "{{currentPage}} of {{pagesCount}}"
   },
   "footer": {
