@@ -126,7 +126,7 @@ const smallInput = css`
 `;
 
 const InputRaw = styled.input<{ variant?: InputProps['size'] }>`
-  background-color: #fff;
+  background-color: ${p => p.theme.surface.background};
   border: 0;
   border-radius: 0.25rem;
   color: ${p => p.theme.text};
@@ -136,7 +136,6 @@ const InputRaw = styled.input<{ variant?: InputProps['size'] }>`
 
   &:disabled {
     background-color: ${p => p.theme.border};
-    color: #ccc;
   }
 
   ${p => (p.variant === 'small' ? smallInput : '')}

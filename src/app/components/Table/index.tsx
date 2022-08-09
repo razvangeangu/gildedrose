@@ -98,7 +98,7 @@ export function Table({ columns, data }: any) {
 }
 
 const StyledTable = styled.table`
-  background-color: #fff;
+  background-color: ${p => p.theme.surface.background};
   border: 0.0625rem solid ${p => p.theme.border};
   border-collapse: separate;
   border-radius: 0.25rem;
